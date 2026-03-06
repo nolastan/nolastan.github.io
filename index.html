@@ -1,52 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stanford Rosenthal</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stanford Rosenthal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a1a18;
+      --ink-light: #5a5a52;
+      --ink-faint: #9a9a90;
+      --paper: #f7f5f0;
+      --accent: #c85a2a;
+      --rule: #dddbd4;
+      --max: 640px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 17px; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Lora', Georgia, serif;
+      line-height: 1.75;
+      padding: 0 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .site {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 80px 0 120px;
+    }
+
+    /* Header */
+    header {
+      margin-bottom: 64px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    h1 {
+      font-family: 'Lora', Georgia, serif;
+      font-weight: 500;
+      font-size: 1.5rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+    }
+
+    .tagline {
+      font-family: 'DM Mono', monospace;
+      font-weight: 300;
+      font-size: 0.78rem;
+      color: var(--ink-light);
+      letter-spacing: 0.04em;
+      margin-bottom: 20px;
+    }
+
+    .contact-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: var(--ink-light);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 0;
+      align-items: center;
+    }
+
+    .contact-line a,
+    .contact-line span {
+      color: var(--ink-light);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .contact-line a:hover { color: var(--accent); }
+
+    .sep {
+      margin: 0 10px;
+      color: var(--rule);
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    section:nth-child(2) { animation-delay: 0.08s; }
+    section:nth-child(3) { animation-delay: 0.14s; }
+    section:nth-child(4) { animation-delay: 0.20s; }
+    section:nth-child(5) { animation-delay: 0.26s; }
+    section:nth-child(6) { animation-delay: 0.32s; }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 20px;
+    }
+
+    /* Bio */
+    .bio-intro {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    .bio-body p {
+      font-size: 0.95rem;
+      color: var(--ink-light);
+      margin-bottom: 16px;
+      line-height: 1.85;
+    }
+
+    .bio-body p:last-child { margin-bottom: 0; }
+
+    em {
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    /* Work entries */
+    .entries { display: flex; flex-direction: column; gap: 24px; }
+
+    .entry {}
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .entry-name {
+      font-family: 'Lora', Georgia, serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+
+    .entry-name a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .entry-name a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .entry-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: var(--ink-faint);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .entry-desc {
+      font-size: 0.88rem;
+      color: var(--ink-light);
+      line-height: 1.7;
+    }
+
+    /* Rule */
+    hr {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 0 0 56px;
+    }
+
+    /* Earlier line */
+    .earlier {
+      font-size: 0.85rem;
+      color: var(--ink-faint);
+      font-family: 'DM Mono', monospace;
+      font-weight: 300;
+    }
+
+    .earlier a {
+      color: var(--ink-faint);
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .earlier a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Writing list */
+    .writing-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .writing-list li { display: flex; align-items: baseline; gap: 14px; }
+    .writing-list a {
+      font-size: 0.93rem;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.15s, border-color 0.15s;
+      line-height: 1.5;
+    }
+    .writing-list a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    .writing-list .w-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 300;
+      color: var(--ink-faint);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 80px;
+      padding-top: 24px;
+      border-top: 1px solid var(--rule);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: var(--ink-faint);
+    }
+
+    /* Animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Links in body text */
+    a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.15s, border-color 0.15s;
+    }
+    a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      html { font-size: 16px; }
+      .site { padding: 56px 0 80px; }
+      .entry-header { flex-direction: column; gap: 2px; }
+    }
+  </style>
 </head>
 <body>
+  <div class="site">
+
     <header>
-        <h1>Stanford Rosenthal</h1>
-        <p>Professional Personal Website</p>
+      <h1>Stanford Rosenthal</h1>
+      <p class="tagline">Senior Product Designer · San Francisco</p>
+      <div class="contact-line">
+        <a href="https://www.linkedin.com/in/nolastan/" target="_blank">LinkedIn</a>
+        <span class="sep">·</span>
+        <a href="https://medium.com/@stan" target="_blank">Medium</a>
+        <span class="sep">·</span>
+        <a href="https://dribbble.com/stanford" target="_blank">Dribbble</a>
+        <span class="sep">·</span>
+        <a href="https://github.com/nolastan" target="_blank">GitHub</a>
+        <span class="sep">·</span>
+        <a href="https://layers.to/stanford" target="_blank">Layers</a>
+      </div>
     </header>
-    <main>
-        <section id="bio">
-            <h2>Biography</h2>
-            <p>Stanford Rosenthal is a dedicated professional with extensive work experience in various fields.</p>
-        </section>
-        <section id="experience">
-            <h2>Work Experience</h2>
-            <ul>
-                <li>Laude</li>
-                <li>Mosey</li>
-                <li>Kenzie Academy</li>
-                <li>LinkedIn</li>
-                <li>TaskRabbit</li>
-                <li>SaveUp</li>
-                <li>Code for America</li>
-            </ul>
-        </section>
-        <section id="projects">
-            <h2>Projects</h2>
-            <ul>
-                <li>Levees.org</li>
-                <li>ReduceMail.org</li>
-                <li>Castro Duplex</li>
-                <li>ChargeUp</li>
-                <li>Orleans Parish Prison Reform Coalition</li>
-            </ul>
-        </section>
-    </main>
-    <footer>
-        <p>Contact: <a href="mailto:nolastan@pm.me">nolastan@pm.me</a></p>
-        <p>Connect with me on: 
-            <a href="https://www.linkedin.com/in/stanfordrosenthal">LinkedIn</a>, 
-            <a href="https://medium.com/@stanfordrosenthal">Medium</a>, 
-            <a href="https://dribbble.com/stanfordrosenthal">Dribbble</a>, 
-            <a href="https://github.com/nolastan">GitHub</a>
-        </p>
-    </footer>
-</body>
-</html>
+
+    <section>
+      <div class="bio-intro">
+        Stanford Rosenthal is a Senior Product Designer based in San Francisco and doing UX work at <a href="https://laude.org" target="_blank">Laude</a>, a nonprofit that convenes, resources, and amplifies computer scientists that ship their research and impact the lives of billions.
+      </div>
+      <div class="bio-body">
+        <p>I've been designing and building for the web for 17 years–it&lsquo;s what I love to do.</p>
+        <p>I grew up in New Orleans. At 15, after Hurricane Katrina exposed the failures of the levee system, my mother and I co-founded <a href="https://levees.org" target="_blank">Levees.org</a> to push back on the myths surrounding what happened. That experience — making something real out of outrage and a domain name — shaped how I think about design and technology to this day. (The full story is told in an award-winning book, <em><a href="https://www.wordswhisperedinwater.com/">Words Whispered in Water</a></em>.)</p>
+        <p>My career has been deliberately non-linear. I left college to join a startup, and have been an early team member at several others. I built a UX design curriculum that ranked #1 on Course Report and led a team of 45 developing and delivering software engineering curriculum. I&lsquo;ve designed products that help people save money, find work, review medical bills, and reduce paper waste.</p>
+        <p>What ties it together isn&lsquo;t a category or an industry — it&lsquo;s a question I keep asking: <em>how do we design systems that make people&lsquo;s lives genuinely better, especially people who aren&lsquo;t usually centered in product conversations?</em></p>
+        <p>Right now that question is pulling me toward climate adaptation and democratic AI.</p>
+        <p>When I'm not designing or coding, I'm usually prepping produce from the farmer's market, trying to grow some myself, and finding excuses to share it with others.</p>
+      </div>
+    </section>
+
+    <hr />
+
+    <section>
+      <p class="section-label">Work</p>
+      <div class="entries">
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name"><a href="https://laude.org" target="_blank">Laude Institute</a></span>
+            <span class="entry-date">2025 — present</span>
+          </div>
+          <p class="entry-desc">UX engineer working on in-house products to support researchers. Designed a grant selection form that one researcher called <a href="https://x.com/Mishok2000/status/1937453558254747662" target="_blank">"the best UI for choosing research support in the investment world."</a></p>
+        </div>
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name">Mosey</span>
+            <span class="entry-date">2024 — 2025</span>
+          </div>
+          <p class="entry-desc">Sole designer for a compliance platform helping companies stay compliant across all 50 states. Led design for the Tasks Framework rollout — establishing consistent task and status components across the product — and redesigned the user dashboard around a location-first navigation model.</p>
+        </div>
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name">UpSmith</span>
+            <span class="entry-date">2022 — 2024</span>
+          </div>
+          <p class="entry-desc">Created the brand and designed UX for an upskilling marketplace connecting employers with new talent in clean energy, HVAC/electric, and manufacturing industries.</p>
+        </div>
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name">Kenzie Academy</span>
+            <span class="entry-date">2018 — 2021</span>
+          </div>
+          <p class="entry-desc">Head of Academics. Created the UX Design curriculum, ranked #1 by Course Report. Led a team of 45, met daily with the executive team, and prepared materials for potential investors and acquirers as the company was acquired by SNHU.</p>
+        </div>
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name">Remedy</span>
+            <span class="entry-date">2015 — 2017</span>
+          </div>
+          <p class="entry-desc">Created the brand and designed onboarding for a medical bill review startup that corrected errors, caught overcharges, and negotiated with hospitals to save patients money.</p>
+        </div>
+        <p class="earlier">Earlier: LinkedIn, TaskRabbit, SaveUp, Code for America.</p>
+      </div>
+    </section>
+
+    <hr />
+
+    <section>
+      <p class="section-label">Writing</p>
+      <ul class="writing-list">
+        <li>
+          <span class="w-date">2017</span>
+          <a href="https://medium.com/the-minimalist/7-ways-to-unsubscribe-from-physical-mail-d1b91673b1f4" target="_blank">7 ways to unsubscribe from physical mail</a>
+        </li>
+        <li>
+          <span class="w-date">2016</span>
+          <a href="https://medium.com/@stan/three-things-i-hope-have-changed-but-probably-havent-a0604d699a32" target="_blank">Three things I hope have changed (but probably haven't)</a>
+        </li>
+        <li>
+          <span class="w-date">2015</span>
+          <a href="https://medium.com/@stan/what-are-we-doing-right-a66878b78c1f" target="_blank">What are we doing right?</a>
+        </li>
+        <li>
+          <span class="w-date">2015</span>
+          <a href="https://www.linkedin.com/pulse/phone-chargers-homeless-stanford-rosenthal/?trackingId=y3V7SR1FTjOJ9JZcMwSqow%3D%3D" target="_blank">Phone Chargers for the Homeless</a>
+        </li>
+        <li>
+          <span class="w-date">2014</span>
+          <a href="https://medium.com/@stan/5-steps-to-safer-bike-lanes-a76744694bef" target="_blank">5 Steps to Safer Bike Lanes</a>
+        </li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <section>
+      <p class="section-label">Projects</p>
+      <div class="entries">
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name"><a href="https://levees.org" target="_blank">Levees.org</a></span>
+            <span class="entry-date">2005 — ongoing</span>
+          </div>
+          <p class="entry-desc">Co-founded at 15 after Hurricane Katrina to hold engineers and government accountable for the levee failures. Subject of the book <em>Words Whispered in Water</em>.</p>
+        </div>
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name"><a href="https://nola.today" target="_blank">NOLA.Today</a></span>
+          </div>
+          <p class="entry-desc">A hyper-local news site surfacing construction projects, community events, and performances in New Orleans. Built with Ruby on Rails, Mapbox, and web scraping.</p>
+        </div>
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name"><a href="https://reducemail.org" target="_blank">ReduceMail.org</a></span>
+          </div>
+          <p class="entry-desc">A free resource with practical tips for cutting down on physical junk mail. Evolved from Mel, an earlier AI-powered unsubscribe service.</p>
+        </div>
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name">Upcoming</span>
+          </div>
+          <p class="entry-desc">Turned calendars into public-facing event websites, giving organizations a home for in-person events without relying on Facebook. Built with Ruby on Rails, ICS, and Tailwind.</p>
+        </div>
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name">ChargeUp</span>
+            <span class="entry-date">2015</span>
+          </div>
+          <p class="entry-desc">Provided portable phone chargers to unhoused people in SF's Tenderloin, funded by a LinkedIn Employee Transformation Grant.</p>
+        </div>
+        <div class="entry">
+          <div class="entry-header">
+            <span class="entry-name">Orleans Parish Prison Reform Coalition</span>
+          </div>
+          <p class="entry-desc">Redesigned their website, converting a decade of content into concise, evergreen pages.</p>
