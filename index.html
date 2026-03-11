@@ -49,8 +49,7 @@
     .sidebar {
       width: 280px;
       flex-shrink: 0;
-      position: sticky;
-      top: 80px;
+      margin-top: 200px;
     }
 
     /* Header */
@@ -274,12 +273,10 @@
 
     /* Thought Bubble */
     .thought-bubble {
-      background: white;
-      border: 2px solid var(--rule);
-      border-radius: 20px;
-      padding: 24px;
+      border: 1px solid var(--rule);
+      border-radius: 16px;
+      padding: 20px;
       position: relative;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
       opacity: 0;
       animation: fadeUp 0.6s ease forwards;
       animation-delay: 0.4s;
@@ -289,24 +286,24 @@
     .thought-bubble::after {
       content: '';
       position: absolute;
-      background: white;
-      border: 2px solid var(--rule);
+      border: 1px solid var(--rule);
       border-radius: 50%;
+      background: var(--paper);
     }
 
     .thought-bubble::before {
-      width: 20px;
-      height: 20px;
-      bottom: -30px;
-      left: 30px;
+      width: 16px;
+      height: 16px;
+      bottom: -24px;
+      left: 28px;
       border-right-color: transparent;
       border-bottom-color: transparent;
     }
 
     .thought-bubble::after {
-      width: 12px;
-      height: 12px;
-      bottom: -45px;
+      width: 10px;
+      height: 10px;
+      bottom: -36px;
       left: 20px;
       border-right-color: transparent;
       border-bottom-color: transparent;
@@ -371,6 +368,45 @@
       color: var(--ink-faint);
       font-style: italic;
       font-size: 0.88rem;
+    }
+
+    .thought-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .thought-nav button {
+      background: none;
+      border: none;
+      color: var(--ink-faint);
+      cursor: pointer;
+      padding: 4px 8px;
+      font-size: 1.2rem;
+      line-height: 1;
+      transition: color 0.15s;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .thought-nav button:hover:not(:disabled) {
+      color: var(--accent);
+    }
+
+    .thought-nav button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .thought-counter {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--ink-faint);
+      min-width: 40px;
+      text-align: center;
     }
 
     /* Mobile */
@@ -574,62 +610,102 @@
           Latest Thought
         </div>
         <div id="bluesky-post" class="thought-loading">Loading...</div>
+        <div class="thought-nav" id="thought-nav" style="display: none;">
+          <button id="prev-post" aria-label="Previous post">←</button>
+          <span class="thought-counter" id="post-counter">1/5</span>
+          <button id="next-post" aria-label="Next post">→</button>
+        </div>
       </div>
     </aside>
 
   </div>
 
   <script>
-    async function fetchLatestBlueskyPost() {
-      try {
-        const response = await fetch('https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=nolastan.bsky.social&limit=1');
-        const data = await response.json();
+    let posts = [];
+    let currentIndex = 0;
 
-        if (data.feed && data.feed.length > 0) {
-          const post = data.feed[0].post;
-          const text = post.record.text;
-          const createdAt = new Date(post.record.createdAt);
-          const postUri = post.uri.replace('at://', '').split('/');
-          const postUrl = `https://bsky.app/profile/${postUri[0]}/post/${postUri[2]}`;
+    function formatTimeAgo(createdAt) {
+      const now = new Date();
+      const diffMs = now - createdAt;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
 
-          // Format relative time
-          const now = new Date();
-          const diffMs = now - createdAt;
-          const diffMins = Math.floor(diffMs / 60000);
-          const diffHours = Math.floor(diffMs / 3600000);
-          const diffDays = Math.floor(diffMs / 86400000);
-
-          let timeAgo;
-          if (diffMins < 60) {
-            timeAgo = diffMins === 1 ? '1 min ago' : `${diffMins} mins ago`;
-          } else if (diffHours < 24) {
-            timeAgo = diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
-          } else if (diffDays < 7) {
-            timeAgo = diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
-          } else {
-            timeAgo = createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-          }
-
-          // Convert URLs and mentions to links
-          let formattedText = text
-            .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>')
-            .replace(/\n/g, '<br>');
-
-          document.getElementById('bluesky-post').innerHTML = `
-            <div class="thought-text">${formattedText}</div>
-            <div class="thought-meta">
-              <a href="${postUrl}" target="_blank">${timeAgo}</a>
-            </div>
-          `;
-        }
-      } catch (error) {
-        console.error('Error fetching Bluesky post:', error);
-        document.getElementById('bluesky-post').innerHTML = '<div class="thought-loading">Unable to load post</div>';
+      if (diffMins < 60) {
+        return diffMins === 1 ? '1 min ago' : `${diffMins} mins ago`;
+      } else if (diffHours < 24) {
+        return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
+      } else if (diffDays < 7) {
+        return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
+      } else {
+        return createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       }
     }
 
-    // Fetch post when page loads
-    fetchLatestBlueskyPost();
+    function displayPost(index) {
+      const post = posts[index].post;
+      const text = post.record.text;
+      const createdAt = new Date(post.record.createdAt);
+      const postUri = post.uri.replace('at://', '').split('/');
+      const postUrl = `https://bsky.app/profile/${postUri[0]}/post/${postUri[2]}`;
+      const timeAgo = formatTimeAgo(createdAt);
+
+      // Convert URLs and mentions to links
+      let formattedText = text
+        .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>')
+        .replace(/\n/g, '<br>');
+
+      document.getElementById('bluesky-post').innerHTML = `
+        <div class="thought-text">${formattedText}</div>
+        <div class="thought-meta">
+          <a href="${postUrl}" target="_blank">${timeAgo}</a>
+        </div>
+      `;
+
+      // Update counter and button states
+      document.getElementById('post-counter').textContent = `${index + 1}/${posts.length}`;
+      document.getElementById('prev-post').disabled = index === 0;
+      document.getElementById('next-post').disabled = index === posts.length - 1;
+    }
+
+    async function fetchLatestBlueskyPosts() {
+      try {
+        const response = await fetch('https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=nolastan.bsky.social&limit=5');
+        const data = await response.json();
+
+        if (data.feed && data.feed.length > 0) {
+          posts = data.feed;
+          currentIndex = 0;
+          displayPost(currentIndex);
+
+          // Show navigation if there are multiple posts
+          if (posts.length > 1) {
+            document.getElementById('thought-nav').style.display = 'flex';
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching Bluesky posts:', error);
+        document.getElementById('bluesky-post').innerHTML = '<div class="thought-loading">Unable to load posts</div>';
+      }
+    }
+
+    // Navigation handlers
+    document.getElementById('prev-post').addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        displayPost(currentIndex);
+      }
+    });
+
+    document.getElementById('next-post').addEventListener('click', () => {
+      if (currentIndex < posts.length - 1) {
+        currentIndex++;
+        displayPost(currentIndex);
+      }
+    });
+
+    // Fetch posts when page loads
+    fetchLatestBlueskyPosts();
   </script>
 </body>
 </html>
