@@ -292,40 +292,51 @@
     }
 
     .thought-bubble::before {
-      width: 16px;
-      height: 16px;
-      bottom: -24px;
-      left: 28px;
-      border-right-color: transparent;
-      border-bottom-color: transparent;
+      width: 14px;
+      height: 14px;
+      bottom: -20px;
+      left: 26px;
     }
 
     .thought-bubble::after {
-      width: 10px;
-      height: 10px;
-      bottom: -36px;
-      left: 20px;
-      border-right-color: transparent;
-      border-bottom-color: transparent;
+      width: 9px;
+      height: 9px;
+      bottom: -33px;
+      left: 16px;
+    }
+
+    .thought-c3 {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border: 1px solid var(--rule);
+      border-radius: 50%;
+      background: var(--paper);
+      bottom: -43px;
+      left: 9px;
     }
 
     .thought-bubble-header {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      font-weight: 400;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--ink-faint);
-      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
+      margin-bottom: 16px;
     }
 
     .bluesky-icon {
       width: 16px;
       height: 16px;
-      fill: #1185fe;
+      fill: var(--ink-faint);
+      transition: fill 0.15s;
+    }
+
+    .bluesky-icon-link {
+      border-bottom: none !important;
+      line-height: 0;
+    }
+
+    .bluesky-icon-link:hover .bluesky-icon {
+      fill: var(--accent);
     }
 
     .thought-text {
@@ -348,8 +359,7 @@
       font-family: 'DM Mono', monospace;
       font-size: 0.7rem;
       color: var(--ink-faint);
-      padding-top: 12px;
-      border-top: 1px solid var(--rule);
+      margin-top: 10px;
     }
 
     .thought-meta a {
@@ -372,12 +382,8 @@
 
     .thought-nav {
       display: flex;
-      justify-content: center;
       align-items: center;
-      gap: 16px;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--rule);
+      gap: 4px;
     }
 
     .thought-nav button {
@@ -603,18 +609,19 @@
 
     <aside class="sidebar">
       <div class="thought-bubble">
+        <i class="thought-c3"></i>
         <div class="thought-bubble-header">
-          <svg class="bluesky-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/>
-          </svg>
-          Latest Thought
+          <a href="https://bsky.app/profile/nolastan.bsky.social" target="_blank" class="bluesky-icon-link">
+            <svg class="bluesky-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/>
+            </svg>
+          </a>
+          <div class="thought-nav" id="thought-nav" style="display: none;">
+            <button id="prev-post" aria-label="Previous post">←</button>
+            <button id="next-post" aria-label="Next post">→</button>
+          </div>
         </div>
         <div id="bluesky-post" class="thought-loading">Loading...</div>
-        <div class="thought-nav" id="thought-nav" style="display: none;">
-          <button id="prev-post" aria-label="Previous post">←</button>
-          <span class="thought-counter" id="post-counter">1/5</span>
-          <button id="next-post" aria-label="Next post">→</button>
-        </div>
       </div>
     </aside>
 
@@ -662,8 +669,7 @@
         </div>
       `;
 
-      // Update counter and button states
-      document.getElementById('post-counter').textContent = `${index + 1}/${posts.length}`;
+      // Update button states
       document.getElementById('prev-post').disabled = index === 0;
       document.getElementById('next-post').disabled = index === posts.length - 1;
     }
