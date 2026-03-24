@@ -31,10 +31,26 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* Banner */
+    .banner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 0 0;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+    }
+
     .site {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 80px 0 120px;
+      padding: 48px 0 120px;
       display: flex;
       gap: 60px;
       align-items: start;
@@ -417,6 +433,16 @@
 
     /* Mobile */
     @media (max-width: 1024px) {
+      .banner {
+        margin-left: -24px;
+        margin-right: -24px;
+        padding-top: 0;
+      }
+
+      .banner img {
+        border-radius: 0;
+      }
+
       .site {
         flex-direction: column;
         gap: 40px;
@@ -442,6 +468,10 @@
   </style>
 </head>
 <body>
+  <div class="banner">
+    <img src="banner.png" alt="Stanford Rosenthal" />
+  </div>
+
   <div class="site">
     <div class="main-content">
 
