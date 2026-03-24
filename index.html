@@ -32,12 +32,32 @@
     }
 
     .site {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
       padding: 80px 0 120px;
       display: flex;
       gap: 60px;
       align-items: start;
+    }
+
+    /* Profile photo — desktop column */
+    .profile-photo-col {
+      flex-shrink: 0;
+      width: 200px;
+      align-self: flex-start;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .profile-photo-col img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Profile photo — mobile (inside header) */
+    .profile-photo-mobile {
+      display: none;
     }
 
     .main-content {
@@ -422,6 +442,23 @@
         gap: 40px;
       }
 
+      .profile-photo-col {
+        display: none;
+      }
+
+      .profile-photo-mobile {
+        display: block;
+        width: 120px;
+        height: auto;
+        flex-shrink: 0;
+      }
+
+      .header-with-photo {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
       .sidebar {
         width: 100%;
         max-width: var(--max);
@@ -438,17 +475,25 @@
       html { font-size: 16px; }
       .site { padding: 56px 0 80px; }
       .entry-header { flex-direction: column; gap: 2px; }
+      .profile-photo-mobile { width: 100px; }
+      .header-with-photo { gap: 16px; }
     }
   </style>
 </head>
 <body>
   <div class="site">
+    <div class="profile-photo-col">
+      <img src="profile.png" alt="Stanford Rosenthal" />
+    </div>
     <div class="main-content">
 
     <header>
-      <h1>Stanford Rosenthal</h1>
-      <p class="tagline">Senior Product Designer · San Francisco</p>
-      <div class="contact-line">
+      <div class="header-with-photo">
+        <img src="profile.png" class="profile-photo-mobile" alt="Stanford Rosenthal" />
+        <div class="header-text">
+          <h1>Stanford Rosenthal</h1>
+          <p class="tagline">Senior Product Designer · San Francisco</p>
+          <div class="contact-line">
         <a href="https://www.linkedin.com/in/nolastan/" target="_blank">LinkedIn</a>
         <span class="sep">·</span>
         <a href="https://medium.com/@stan" target="_blank">Medium</a>
@@ -458,6 +503,8 @@
         <a href="https://github.com/nolastan" target="_blank">GitHub</a>
         <span class="sep">·</span>
         <a href="https://layers.to/stanford" target="_blank">Layers</a>
+          </div>
+        </div>
       </div>
     </header>
 
