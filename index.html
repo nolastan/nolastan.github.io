@@ -31,33 +31,29 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    .site {
-      max-width: 1280px;
+    /* Banner */
+    .banner {
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 80px 0 120px;
-      display: flex;
-      gap: 60px;
-      align-items: start;
-    }
-
-    /* Profile photo — desktop column */
-    .profile-photo-col {
-      flex-shrink: 0;
-      width: 200px;
-      align-self: flex-start;
+      padding: 48px 0 0;
       opacity: 0;
       animation: fadeUp 0.6s ease forwards;
     }
 
-    .profile-photo-col img {
+    .banner img {
       width: 100%;
       height: auto;
       display: block;
+      border-radius: 8px;
     }
 
-    /* Profile photo — mobile (inside header) */
-    .profile-photo-mobile {
-      display: none;
+    .site {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 0 120px;
+      display: flex;
+      gap: 60px;
+      align-items: start;
     }
 
     .main-content {
@@ -442,23 +438,6 @@
         gap: 40px;
       }
 
-      .profile-photo-col {
-        display: none;
-      }
-
-      .profile-photo-mobile {
-        display: block;
-        width: 120px;
-        height: auto;
-        flex-shrink: 0;
-      }
-
-      .header-with-photo {
-        display: flex;
-        align-items: flex-start;
-        gap: 20px;
-      }
-
       .sidebar {
         width: 100%;
         max-width: var(--max);
@@ -475,25 +454,21 @@
       html { font-size: 16px; }
       .site { padding: 56px 0 80px; }
       .entry-header { flex-direction: column; gap: 2px; }
-      .profile-photo-mobile { width: 100px; }
-      .header-with-photo { gap: 16px; }
     }
   </style>
 </head>
 <body>
+  <div class="banner">
+    <img src="banner.png" alt="Stanford Rosenthal" />
+  </div>
+
   <div class="site">
-    <div class="profile-photo-col">
-      <img src="profile.png" alt="Stanford Rosenthal" />
-    </div>
     <div class="main-content">
 
     <header>
-      <div class="header-with-photo">
-        <img src="profile.png" class="profile-photo-mobile" alt="Stanford Rosenthal" />
-        <div class="header-text">
-          <h1>Stanford Rosenthal</h1>
-          <p class="tagline">Senior Product Designer · San Francisco</p>
-          <div class="contact-line">
+      <h1>Stanford Rosenthal</h1>
+      <p class="tagline">Senior Product Designer · San Francisco</p>
+      <div class="contact-line">
         <a href="https://www.linkedin.com/in/nolastan/" target="_blank">LinkedIn</a>
         <span class="sep">·</span>
         <a href="https://medium.com/@stan" target="_blank">Medium</a>
@@ -503,8 +478,6 @@
         <a href="https://github.com/nolastan" target="_blank">GitHub</a>
         <span class="sep">·</span>
         <a href="https://layers.to/stanford" target="_blank">Layers</a>
-          </div>
-        </div>
       </div>
     </header>
 
