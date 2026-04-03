@@ -396,6 +396,40 @@
       font-size: 0.88rem;
     }
 
+    .thought-images {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .thought-images.single {
+      grid-template-columns: 1fr;
+    }
+
+    .thought-images.multi {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .thought-images a {
+      display: block;
+      border-bottom: none;
+      line-height: 0;
+    }
+
+    .thought-images img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.15s;
+    }
+
+    .thought-images a:hover img {
+      opacity: 0.85;
+    }
+
     .thought-nav {
       display: flex;
       align-items: center;
@@ -722,8 +756,27 @@
         .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>')
         .replace(/\n/g, '<br>');
 
+      // Build image HTML if the post has embedded images
+      let imagesHtml = '';
+      const embed = post.embed;
+      if (embed) {
+        let images = null;
+        if (embed.$type === 'app.bsky.embed.images#view') {
+          images = embed.images;
+        } else if (embed.$type === 'app.bsky.embed.recordWithMedia#view' && embed.media && embed.media.$type === 'app.bsky.embed.images#view') {
+          images = embed.media.images;
+        }
+        if (images && images.length > 0) {
+          const gridClass = images.length === 1 ? 'single' : 'multi';
+          imagesHtml = `<div class="thought-images ${gridClass}">${images.map(img =>
+            `<a href="${img.fullsize}" target="_blank"><img src="${img.thumb}" alt="${(img.alt || '').replace(/"/g, '&quot;')}" loading="lazy" /></a>`
+          ).join('')}</div>`;
+        }
+      }
+
       document.getElementById('bluesky-post').innerHTML = `
-        <div class="thought-text">${formattedText}</div>
+        ${formattedText ? `<div class="thought-text">${formattedText}</div>` : ''}
+        ${imagesHtml}
         <div class="thought-meta">
           <a href="${postUrl}" target="_blank">${timeAgo}</a>
         </div>
