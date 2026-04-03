@@ -30,7 +30,7 @@ class GardenSection extends HTMLElement {
       <style>
         :host {
           display: block;
-          margin-top: 32px;
+          margin-top: 56px;
         }
 
         .garden-label {
